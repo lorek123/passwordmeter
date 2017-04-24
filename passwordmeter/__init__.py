@@ -79,7 +79,7 @@ class LengthFactor(Factor):
     self.target = int(target)
   def test(self, value, extra):
     value = len(value)
-    return (asym(value, self.target), _('Increase the length of the password'))
+    return (asym(value, self.target), _('Zwiększ długość hasła'))
 
 #------------------------------------------------------------------------------
 class CharmixFactor(Factor):
@@ -89,7 +89,7 @@ class CharmixFactor(Factor):
     re.compile('[0-9]'),        # numeric
     re.compile('[^a-zA-Z0-9]'), # symbols
     )
-  message = 'Use a good mix of numbers, letters, and symbols'
+  message = 'Użyj kombinacji cyfr, liter i znaków specjalnych'
   def test(self, value, extra):
     if not self.matchers:
       return 1.0
@@ -105,7 +105,7 @@ class CasemixFactor(CharmixFactor):
     re.compile('[a-z]'),
     re.compile('[A-Z]'),
     )
-  message = 'Use a good mix of UPPER case and lower case letters'
+  message = 'Użyj kombinacji dużych i małych liter'
 
 #------------------------------------------------------------------------------
 class VarietyFactor(Factor):
@@ -121,14 +121,14 @@ class VarietyFactor(Factor):
     score = curveavg([
       len(set(value)) / max(1, float(len(value))),
       diff / (diff + same ** 1.5)])
-    return (score, _('Minimize character duplicates and repetitions'))
+    return (score, _('Unikaj powtarzających się znaków obok siebie'))
 
 #------------------------------------------------------------------------------
 class NotWordFactor(Factor):
   category = 'notword'
   def test(self, value, extra):
     if value.lower() in common10k:
-      return (0, _('Avoid using one of the ten thousand most common passwords'))
+      return (0, _('Twoje hasło jest na liście 10000 najbardziej popularnych, zalecana jest jego zmiana'))
     # TODO: check against dictionary words too... maybe use ispell?
     #         http://code.activestate.com/recipes/117221-spell-checking/
     # todo: check for 'l33t-speak'...
@@ -138,7 +138,7 @@ class NotWordFactor(Factor):
 class PhraseFactor(Factor):
   category = 'phrase'
   base = 0.65
-  message = 'Passphrases (e.g. an obfuscated sentence) are better than passwords'
+  message = 'Zdania, są lepsze niż pojedyńcze słowo jako hasło'
   def test(self, value, extra):
     # todo: this might be improved... for example, i should:
     #   - value words of different lengths (large distribution) -- check stddev
